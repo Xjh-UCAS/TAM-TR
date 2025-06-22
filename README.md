@@ -4,7 +4,7 @@
 
 This is the official PyTorch implementation of the following publication:
 
-> **CoFiI2P: Coarse-to-Fine Correspondences-Based Image-to-Point Cloud Registration**<br/>
+> **TAM-TR: Text-guided Attention Multi-Modal Transformer for Object Detection in UAV Images**<br/>
 > *Elsevier ISPRS 2025*<br/>
 > [**Paper**](https://doi.org/10.1016/j.isprsjprs.2025.04.027) | [**Project-page**](https://github.com/Xjh-UCAS/TAM-TR/) 
 
