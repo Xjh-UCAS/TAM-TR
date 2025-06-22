@@ -1,0 +1,22 @@
+# train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
+path: /bigdata/XJH/TAM-TR  # dataset root dir
+train: ./visdrone/VisDrone2019-DET-train/images  # 118287 images
+val: ./visdrone/VisDrone2019-DET-test-dev/images  # 5000 images
+test: ./visdrone/VisDrone2019-DET-test-dev/images  # 20288 of 40670 images, submit to https://competitions.codalab.org/competitions/20794
+ 
+# number of classes
+nc: 10
+ 
+# class names
+names: 
+  0: pedestrian
+  1: people
+  2: bicycle
+  3: car
+  4: van
+  5: truck
+  6: tricycle
+  7: awning-tricycle
+  8: bus
+  9: motor
+

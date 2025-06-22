@@ -1,0 +1,67 @@
+# Ultralytics YOLO 🚀, AGPL-3.0 license
+# YOLOv8 object detection model with P3-P5 outputs. For Usage examples see https://docs.ultralytics.com/tasks/detect
+
+# Parameters
+nc: 80  # number of classes
+
+
+# YOLOv8.0n backbone
+backbone:
+  # [from, repeats, module, args]
+  - [-1, 1, Conv, [64, 3, 2]]  # 0-P1/2 640
+  - [-1, 1, Conv, [128, 3, 2]]  # 1-P2/4 320
+  - [-1, 1, RepNCSPELAN4, [256, 128, 64, 1]] #320
+
+  - [-1, 1, Conv, [256, 3, 2]]  # 3-P3/8 160
+
+  - [-1, 1, RepNCSPELAN4, [512, 256, 128, 1]]
+
+  - [-1, 1, Conv, [512, 3, 2]]  # 5-P4/16
+
+  - [-1, 1, RepNCSPELAN4, [512, 512, 256, 1]]
+
+  - [-1, 1, Conv, [512, 3, 2]]  # 7-P5/32
+
+  - [-1, 1, RepNCSPELAN4, [512, 512, 256, 1]]
+
+  - [-1, 1, SPPELAN, [512, 256]]  # 9
+
+# YOLOv8.0n head
+head:
+  - [-1, 1, Conv, [512, 1, 1]]
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]
+  - [6, 1, Conv, [512, 1, 1]]
+  - [4, 1, Conv, [512, 1, 1]]
+  - [-1, 1, nn.Upsample, [None, 0.5, 'nearest']] #C3
+  - [[-1, -3, -4], 1, Concat, [1]] #40W 512 x 3 15
+  - [-1, 1, TIAGELAN, [512, 512, 256, 1, 8]]  # 16 c1, c2, c3, c4, c5=1, nh=8
+  - [-1, 1, CPAM, [512]]
+
+  - [-1, 1, Conv, [256, 1, 1]]
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]
+  - [4, 1, Conv, [256, 1, 1]]
+  - [2, 1, Conv, [256, 1, 1]]
+  - [-1, 1, nn.Upsample, [None, 0.5, 'nearest']] #C3
+  - [[-1, -3, -4], 1, Concat, [1]] #80W 256 x 3
+  - [-1, 1, TIAGELAN, [256, 256, 128, 1, 4]]  # 24 (P3/8-small) 
+  - [-1, 1, CPAM, [256]]
+
+  - [-1, 1, Conv, [128, 1, 1]]
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]
+  - [2, 1, Conv, [128, 1, 1]]
+  - [0, 1, Conv, [128, 1, 1]]
+  - [-1, 1, nn.Upsample, [None, 0.5, 'nearest']] #C3
+  - [[-1, -3, -4], 1, Concat, [1]] #160W 128 x 3
+  - [-1, 1, TIAGELAN, [128, 128, 64, 1, 2]]  #  32 (P2/4-small)
+  - [-1, 1, CPAM, [128]] #320
+
+  - [-1, 1, Conv, [128, 3, 2]]
+  - [[-1, 24], 1, Concat, [1]]  # cat head P4
+  - [-1, 1, TIAGELAN, [256, 256, 128, 1, 4]]  # 36 (P3/8-medium)
+  - [-1, 1, CPAM, [256]]
+
+  - [-1, 1, Conv, [256, 3, 2]]
+  - [[-1, 16], 1, Concat, [1]]  # cat head P5
+  - [-1, 1, TIAGELAN, [512, 512, 256, 1, 8]]  # 40 (P4/16-large)
+
+  - [[32, 36, 40], 1, ManbaWorldDecoder, [nc, 512, 100, 4, 8, 3]]  # RTDETRDecoder(P2, P3, P4)
