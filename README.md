@@ -36,8 +36,8 @@ Experimental results demonstrate that our TAM-TR model achieves 39.7% mean avera
 </p>
 
 ## 💻 Installation
-🔴 Note: Due to the use of the Vmanba library, this code can only be run on linux devices:
-The Vmanba library installation refers to this connection：
+🔴 Note: Due to the use of the Vmanba library, this code can only be run on linux devices:<br/>
+The Vmanba library installation refers to this connection：<br/>
 https://github.com/MzeroMiko/VMamba
 
 pip install -r requirements.txt
